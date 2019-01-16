@@ -182,7 +182,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
       g.dashboard(
         'K8s / Compute Resources / Pod',
         uid=($._config.grafanaDashboardIDs['k8s-resources-pod.json']),
-      ).addTemplate('cluster', 'kube_pod_info', '%s' % $._config.clusterLabel)
+      ).addTemplate('cluster', 'kube_pod_info', $._config.clusterLabel)
       .addTemplate('namespace', 'kube_pod_info', 'namespace')
       .addTemplate('pod', 'kube_pod_info{namespace="$namespace"}', 'pod')
       .addRow(
