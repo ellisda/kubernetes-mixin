@@ -10,7 +10,7 @@
     kubeControllerManagerSelector: 'job="kube-controller-manager"',
     kubeApiserverSelector: 'job="kube-apiserver"',
     podLabel: 'pod',
-    clusterLabel: 'k8s_cluster',
+    clusterLabel: 'cluster',
     namespaceSelector: null,
     prefixedNamespaceSelector: if self.namespaceSelector != null then self.namespaceSelector + ',' else '',
     hostNetworkInterfaceSelector: 'device="eth0"',
