@@ -10,6 +10,7 @@
     kubeControllerManagerSelector: 'job="kube-controller-manager"',
     kubeApiserverSelector: 'job="kube-apiserver"',
     podLabel: 'pod',
+    clusterLabel: 'k8s_cluster',
     namespaceSelector: null,
     prefixedNamespaceSelector: if self.namespaceSelector != null then self.namespaceSelector + ',' else '',
     hostNetworkInterfaceSelector: 'device="eth0"',
@@ -53,6 +54,9 @@
     // For links between grafana dashboards, you need to tell us if your grafana
     // servers under some non-root path.
     grafanaPrefix: '',
+
+    //Opt-in to multi-cluster dashboards
+    showMultiCluster: true,
 
     // This list of filesystem is referenced in various expressions.
     fstypes: ['ext[234]', 'btrfs', 'xfs', 'zfs'],
