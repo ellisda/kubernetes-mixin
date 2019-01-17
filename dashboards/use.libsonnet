@@ -8,7 +8,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
       g.dashboard(
         'K8s / USE Method / Cluster',
         uid=($._config.grafanaDashboardIDs['k8s-cluster-rsrc-use.json']),
-      ).addTemplate('cluster', 'node_cpu_seconds_total', $._config.clusterLabel)
+      ).addTemplate('cluster', 'kube_node_info', $._config.clusterLabel)
       .addRow(
         g.row('CPU')
         .addPanel(
@@ -79,7 +79,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
             |||
               sum(max(node_filesystem_size_bytes{%(fstypeSelector)s, %(clusterLabel)s="$cluster"} - node_filesystem_avail_bytes{%(fstypeSelector)s, %(clusterLabel)s="$cluster"}) by (device,%(podLabel)s,namespace)) by (%(podLabel)s,namespace)
               / scalar(sum(max(node_filesystem_size_bytes{%(fstypeSelector)s, %(clusterLabel)s="$cluster"}) by (device,%(podLabel)s,namespace)))
-              * on (namespace, %(podLabel)s) group_left (node) node_namespace_pod:kube_pod_info:
+              * on (namespace, %(podLabel)s) group_left (node) node_namespace_pod:kube_pod_info:{%(clusterLabel)s="$cluster"}
             ||| % $._config, '{{node}}', legendLink
           ) +
           g.stack +
@@ -91,8 +91,8 @@ local g = import 'grafana-builder/grafana.libsonnet';
       g.dashboard(
         'K8s / USE Method / Node',
         uid=($._config.grafanaDashboardIDs['k8s-node-rsrc-use.json']),
-      ).addTemplate('cluster', 'node_cpu_seconds_total', $._config.clusterLabel)
-      .addTemplate('node', 'kube_node_info', 'node')
+      ).addTemplate('cluster', 'kube_node_info', $._config.clusterLabel)
+      .addTemplate('node', 'kube_node_info{%(clusterLabel)s="$cluster"}'  % $._config, 'node')
       .addRow(
         g.row('CPU')
         .addPanel(

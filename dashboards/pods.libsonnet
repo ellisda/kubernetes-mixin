@@ -99,7 +99,7 @@ local numbersinglestat = promgrafonnet.numbersinglestat;
         template.new(
           'cluster',
           '$datasource',
-          'label_values(kube_pod_info, %(clusterLabel)s)' % $._config,
+          'label_values(kube_node_info, %(clusterLabel)s)' % $._config,
           label='cluster',
           refresh='time',
           hide=if $._config.showMultiCluster then '' else 'variable', 
@@ -127,7 +127,7 @@ local numbersinglestat = promgrafonnet.numbersinglestat;
         template.new(
           'container',
           '$datasource',
-          'label_values(kube_pod_container_info{%(clusterLabel)s="$cluster", namespace="$namespace", pod="$pod"}, container)' % $._config,
+          'label_values(kube_pod_container_info{%(clusterLabel)s="$cluster", namespace="$namespace", %(podLabel)s="$pod"}, container)' % $._config,
           label='Container',
           refresh='time',
           includeAll=true,

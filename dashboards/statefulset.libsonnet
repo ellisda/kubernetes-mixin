@@ -125,7 +125,7 @@ local numbersinglestat = promgrafonnet.numbersinglestat;
         template.new(
           'cluster',
           '$datasource',
-          'label_values(kube_statefulset_metadata_generation{%(kubeStateMetricsSelector)s}, %(clusterLabel)s)' % $._config,
+          'label_values(kube_node_info, %(clusterLabel)s)' % $._config,
           label='cluster',
           refresh='time',
           hide=if $._config.showMultiCluster then '' else 'variable', 
