@@ -13,7 +13,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
       g.dashboard(
         'K8s / Compute Resources / Cluster',
         uid=($._config.grafanaDashboardIDs['k8s-resources-cluster.json']),
-      ).addTemplate('cluster', 'kube_node_info', $._config.clusterLabel)
+      ).addTemplate('cluster', 'node_cpu_seconds_total', $._config.clusterLabel)
       .addRow(
         (g.row('Headlines') +
          {
@@ -114,7 +114,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
       g.dashboard(
         'K8s / Compute Resources / Namespace',
         uid=($._config.grafanaDashboardIDs['k8s-resources-namespace.json']),
-      ).addTemplate('cluster', 'kube_node_info', $._config.clusterLabel)
+      ).addTemplate('cluster', 'kube_pod_info', $._config.clusterLabel)
       .addTemplate('namespace', 'kube_pod_info{%(clusterLabel)s="$cluster"}' % $._config, 'namespace')
       .addRow(
         g.row('CPU Usage')

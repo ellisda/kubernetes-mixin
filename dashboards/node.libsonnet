@@ -207,7 +207,7 @@ local gauge = promgrafonnet.gauge;
         template.new(
           'cluster',
           '$datasource',
-          'label_values(kube_pod_info, %(clusterLabel)s)' % $._config,
+          'label_values(kube_pod_info, %s)' % $._config.clusterLabel,
           label='cluster',
           refresh='time',
           hide=if $._config.showMultiCluster then '' else 'variable', 
@@ -217,7 +217,7 @@ local gauge = promgrafonnet.gauge;
         template.new(
           'instance',
           '$datasource',
-          'label_values(node_boot_time_seconds{%(nodeExporterSelector)s}, instance)' % $._config,
+          'label_values(node_boot_time_seconds{%(clusterLabel)s="$cluster", %(nodeExporterSelector)s}, instance)' % $._config,
           refresh='time',
         )
       )

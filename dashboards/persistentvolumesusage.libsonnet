@@ -83,7 +83,7 @@ local gauge = promgrafonnet.gauge;
         template.new(
           'cluster',
           '$datasource',
-          'label_values(kube_pod_info, %(clusterLabel)s)' % $._config,
+          'label_values(kubelet_volume_stats_capacity_bytes{%(clusterLabel)s)="$cluster"}, cluster)' % $._config,
           label='cluster',
           refresh='time',
           hide=if $._config.showMultiCluster then '' else 'variable', 

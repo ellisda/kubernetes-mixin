@@ -33,7 +33,7 @@ local numbersinglestat = promgrafonnet.numbersinglestat;
           legendFormat='Requested: {{ container }}',
         ))
         .addTarget(prometheus.target(
-          'sum by(container) (kube_pod_container_resource_limits_memory_bytes{%(kubeStateMetricsSelector)s, %(clusterLabel)s=$cluster", namespace="$namespace", pod="$pod", container=~"$container"})' % $._config,
+          'sum by(container) (kube_pod_container_resource_limits_memory_bytes{%(kubeStateMetricsSelector)s, %(clusterLabel)s="$cluster", namespace="$namespace", pod="$pod", container=~"$container"})' % $._config,
           legendFormat='Limit: {{ container }}',
         ))
       );
@@ -99,7 +99,7 @@ local numbersinglestat = promgrafonnet.numbersinglestat;
         template.new(
           'cluster',
           '$datasource',
-          'label_values(kube_node_info, %(clusterLabel)s)' % $._config,
+          'label_values(kube_pod_info, %(clusterLabel)s)' % $._config,
           label='cluster',
           refresh='time',
           hide=if $._config.showMultiCluster then '' else 'variable', 
