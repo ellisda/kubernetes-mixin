@@ -218,6 +218,8 @@
           },
           {
             // Memory utilisation per node, normalized by per-node memory
+            // NOTE: This is normalized by the node's portion of the total
+            //       cluster memory
             // NEW 2018-02-08
             record: 'node:node_memory_utilisation:ratio',
             expr: |||
