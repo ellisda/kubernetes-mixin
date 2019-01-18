@@ -26,6 +26,7 @@
 
     // Grafana dashboard IDs are necessary for stable links for dashboards
     grafanaDashboardIDs: {
+      'k8s-resources-multicluster.json': 'ZnbvYbcXkob7GLqcDPLTj1ZL4MRX87tOh8xdr832', //TODO Where to generate this from?
       'k8s-resources-cluster.json': 'ZnbvYbcXkob7GLqcDPLTj1ZL4MRX87tOh8xdr831',
       'k8s-resources-namespace.json': 'XaY4UCP3J51an4ikqtkUGBSjLpDW4pg39xe2FuxP',
       'k8s-resources-pod.json': 'wU56sdGSNYZTL3eO0db3pONtVmTvsyV7w8aadbYF',

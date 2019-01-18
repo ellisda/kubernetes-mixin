@@ -4,7 +4,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
   grafanaDashboards+:: {
         'k8s-resources-multicluster.json':
       local tableStyles = {
-        namespace: {
+        cluster: { //TODO: Does this need to be "%(clusterLabel)s" ??
           alias: 'Cluster',
           link: '%(prefix)s/d/%(uid)s/k8s-resources-cluster?var-datasource=$datasource&var-cluster=$__cell' % { prefix: $._config.grafanaPrefix, uid: std.md5('k8s-resources-cluster.json') },
         },        
@@ -48,8 +48,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
         g.row('CPU')
         .addPanel(
           g.panel('CPU Usage') +
-          g.queryPanel('sum(namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s)' % $._config, '{{%(clusterLabel)s}}' % $._config) +
-          g.stack
+          g.queryPanel('sum(namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s)' % $._config, '{{%(clusterLabel)s}}' % $._config)
         )
       )
       .addRow(
@@ -77,7 +76,6 @@ local g = import 'grafana-builder/grafana.libsonnet';
           g.panel('Memory Usage (w/o cache)') +
           // Not using container_memory_usage_bytes here because that includes page cache
           g.queryPanel('sum(container_memory_rss{%(clusterLabel)s=~".*", container_name!=""}) by (%(clusterLabel)s)' % $._config, '{{%(clusterLabel)s}}' % $._config) +
-          g.stack +
           { yaxes: g.yaxes('decbytes') },
         )
       )
@@ -89,7 +87,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
             // Not using container_memory_usage_bytes here because that includes page cache
             'sum(container_memory_rss{%(clusterLabel)s=~".*", container_name!=""}) by (%(clusterLabel)s)' % $._config,
             'sum(kube_pod_container_resource_requests_memory_bytes{%(clusterLabel)s="$cluster"}) by (%(clusterLabel)s)' % $._config,
-            'sum(container_memory_rss{%(clusterLabel)s="$cluster", container_name!=""}) by (%(clusterLabel)s) / sum(kube_pod_container_resource_requests_memory_bytes{%(clusterLabel)s=~".("}) by (%(clusterLabel)s)' % $._config,
+            'sum(container_memory_rss{%(clusterLabel)s="$cluster", container_name!=""}) by (%(clusterLabel)s) / sum(kube_pod_container_resource_requests_memory_bytes{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s)' % $._config,
             'sum(kube_pod_container_resource_limits_memory_bytes{%(clusterLabel)s="$cluster"}) by (%(clusterLabel)s)' % $._config,
             'sum(container_memory_rss{%(clusterLabel)s="$cluster", container_name!=""}) by (%(clusterLabel)s) / sum(kube_pod_container_resource_limits_memory_bytes{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s)' % $._config,
           ], tableStyles {
