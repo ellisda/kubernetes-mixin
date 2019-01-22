@@ -47,7 +47,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
         )
         .addPanel(
           g.panel('Disk IO Saturation') +
-          g.queryPanel('sum(node:node_disk_saturation:avg_irate{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s) / sum(kube_pod_info{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s) ' % $._config, '{{%(clusterLabel)s}}' % $._config, legendLink) +
+          g.queryPanel('sum(node:node_disk_saturation:avg_irate{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s) / sum(:kube_pod_info_node_count:{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s) ' % $._config, '{{%(clusterLabel)s}}' % $._config, legendLink) +
           { yaxes: g.yaxes({ format: 'percentunit', max: 1 }) },
         )
       )
@@ -70,12 +70,10 @@ local g = import 'grafana-builder/grafana.libsonnet';
           g.panel('Disk Capacity') +
           g.queryPanel(
             |||
-              sum(max(node_filesystem_size_bytes{%(fstypeSelector)s, %(clusterLabel)s="$cluster"} - node_filesystem_avail_bytes{%(fstypeSelector)s, %(clusterLabel)s="$cluster"}) by (device,%(podLabel)s,namespace)) by (%(podLabel)s,namespace)
-              / scalar(sum(max(node_filesystem_size_bytes{%(fstypeSelector)s, %(clusterLabel)s="$cluster"}) by (device,%(podLabel)s,namespace)))
-              * on (namespace, %(podLabel)s) group_left (node) node_namespace_pod:kube_pod_info:{%(clusterLabel)s="$cluster"}
+              sum(node_filesystem_size_bytes{%(fstypeSelector)s, %(clusterLabel)s=~".*"} - node_filesystem_avail_bytes{%(fstypeSelector)s, %(clusterLabel)s=~".*"}) by (%(clusterLabel)s)
+              / sum(node_filesystem_size_bytes{%(fstypeSelector)s, %(clusterLabel)s=~".*"}) by (%(clusterLabel)s)
             ||| % $._config, '{{node}}', legendLink
           ) +
-          g.stack +
           { yaxes: g.yaxes({ format: 'percentunit', max: 1 }) },
         ),
       ),
