@@ -18,7 +18,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
         )
         .addPanel(
           g.panel('CPU Saturation (Load1)') +
-          g.queryPanel('sum(node:node_cpu_saturation_load1:{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s) / sum(kube_pod_info{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s)' % $._config, '{{%(clusterLabel)s}}' % $._config, legendLink) +
+          g.queryPanel('sum(node:node_cpu_saturation_load1:{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s) / sum(min(kube_pod_info{%(clusterLabel)s=~".*"}) by (node, %(clusterLabel)s)) by(%(clusterLabel)s)' % $._config, '{{%(clusterLabel)s}}' % $._config, legendLink) +
           { yaxes: g.yaxes({ format: 'percentunit', max: 1 }) },
         )
       )
