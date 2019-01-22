@@ -11,7 +11,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
       };
      
       g.dashboard(
-        'K8s / Compute Resources / Multi-Cluster',
+        '%(grafanaDashboardNamePrefix)s  Compute Resources /  Multi-Cluster' % $._config,
         uid=($._config.grafanaDashboardIDs['k8s-resources-multicluster.json']),
       ).addRow(
         (g.row('Headlines') +
@@ -49,6 +49,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
         .addPanel(
           g.panel('CPU Usage') +
           g.queryPanel('sum(namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate{%(clusterLabel)s=~".*"}) by (%(clusterLabel)s)' % $._config, '{{%(clusterLabel)s}}' % $._config)
+          + {fill: 0, linewidth: 2},
         )
       )
       .addRow(
@@ -76,7 +77,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
           g.panel('Memory Usage (w/o cache)') +
           // Not using container_memory_usage_bytes here because that includes page cache
           g.queryPanel('sum(container_memory_rss{%(clusterLabel)s=~".*", container_name!=""}) by (%(clusterLabel)s)' % $._config, '{{%(clusterLabel)s}}' % $._config) +
-          { yaxes: g.yaxes('decbytes') },
+          { fill: 0, linewidth: 2, yaxes: g.yaxes('decbytes') },
         )
       )
       .addRow(
@@ -109,7 +110,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
       };
      
       g.dashboard(
-        'K8s / Compute Resources / Cluster',
+        '%(grafanaDashboardNamePrefix)s Compute Resources / Cluster' % $._config,
         uid=($._config.grafanaDashboardIDs['k8s-resources-cluster.json']),
       ).addTemplate('cluster', 'node_cpu_seconds_total', $._config.clusterLabel)
       .addRow(
@@ -210,7 +211,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
       };
 
       g.dashboard(
-        'K8s / Compute Resources / Namespace',
+        '%(grafanaDashboardNamePrefix)s Compute Resources / Namespace' % $._config,
         uid=($._config.grafanaDashboardIDs['k8s-resources-namespace.json']),
       ).addTemplate('cluster', 'kube_pod_info', $._config.clusterLabel)
       .addTemplate('namespace', 'kube_pod_info{%(clusterLabel)s="$cluster"}' % $._config, 'namespace')
@@ -278,7 +279,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
       };
 
       g.dashboard(
-        'K8s / Compute Resources / Pod',
+        '%(grafanaDashboardNamePrefix)s Compute Resources / Pod' % $._config,
         uid=($._config.grafanaDashboardIDs['k8s-resources-pod.json']),
       ).addTemplate('cluster', 'kube_pod_info', $._config.clusterLabel)
       .addTemplate('namespace', 'kube_pod_info{%(clusterLabel)s="$cluster"}' % $._config, 'namespace')
