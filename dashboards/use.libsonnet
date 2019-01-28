@@ -1,7 +1,7 @@
 local g = import 'grafana-builder/grafana.libsonnet';
 
 {
-  grafanaDashboards+:: {
+  grafanaDashboards+:: (if $._config.showMultiCluster then {
     'k8s-multicluster-rsrc-use.json':
       local legendLink = '%(prefix)s/d/%(uid)s/k8s-cluster-rsrc-use' % { prefix: $._config.grafanaPrefix, uid: std.md5('k8s-multicluster-rsrc-use.json') };
 
@@ -77,7 +77,7 @@ local g = import 'grafana-builder/grafana.libsonnet';
           { fill: 0, linewidth: 2, yaxes: g.yaxes({ format: 'percentunit', max: 1 }) },
         ),
       ),
-
+  } else {}) + {
     'k8s-cluster-rsrc-use.json':
       local legendLink = '%(prefix)s/d/%(uid)s/k8s-node-rsrc-use' % { prefix: $._config.grafanaPrefix, uid: std.md5('k8s-node-rsrc-use.json') };
 
